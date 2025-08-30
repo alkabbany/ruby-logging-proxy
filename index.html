@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Ruby — SafeHouse Club</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Inter, system-ui, sans-serif; margin: 0; background:#0b0c10; color:#e8e8e8; }
+    .wrap { max-width: 760px; margin: 40px auto; padding: 0 16px; }
+    h1 { font-size: 22px; margin: 0 0 16px; }
+    .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin: 4px 0 14px; }
+    input[type=text]{ padding:10px 12px; border-radius:10px; border:1px solid #333; background:#121318; color:#e8e8e8; }
+    textarea{ width:100%; height:90px; padding:12px; border-radius:12px; border:1px solid #333; background:#121318; color:#e8e8e8; }
+    button{ padding:10px 14px; border-radius:10px; border:0; background:#4f46e5; color:white; cursor:pointer; }
+    button:disabled{ opacity:0.6; cursor:not-allowed; }
+    .chat{ background:#0f1116; border:1px solid #1b1f2a; border-radius:12px; padding:12px; margin-top:16px; }
+    .msg{ padding:10px 12px; border-radius:10px; margin:8px 0; }
+    .user{ background:#16212f; }
+    .assistant{ background:#1a231a; }
+    small{ color:#9aa4b2 }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Ruby — SafeHouse Club</h1>
+
+    <div class="row">
+      <label>Alias:</label>
+      <input id="alias" type="text" placeholder="InvestorX" value="InvestorX" />
+      <label style="margin-left:12px"><input id="consent" type="checkbox" checked /> Consent to logging</label>
+    </div>
+
+    <textarea id="input" placeholder="Ask about Mahmeya, Diamond Gate, Share…"></textarea>
+    <div class="row">
+      <button id="send">Send</button>
+      <small id="status"></small>
+    </div>
+
+    <div id="chat" class="chat"></div>
+  </div>
+
+<script>
+  const chat = document.getElementById('chat');
+  const input = document.getElementById('input');
+  const send = document.getElementById('send');
+  const alias = document.getElementById('alias');
+  const consent = document.getElementById('consent');
+  const statusEl = document.getElementById('status');
+
+  // Simple session id
+  const sessionId = 'anon-' + Math.random().toString(36).slice(2, 6);
+
+  function add(role, text){
+    const div = document.createElement('div');
+    div.className = 'msg ' + (role === 'user' ? 'user' : 'assistant');
+    div.textContent = (role === 'user' ? 'You: ' : 'Ruby: ') + text;
+    chat.appendChild(div);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function callChat(message) {
+    statusEl.textContent = 'Thinking…';
+    send.disabled = true;
+    try {
+      const r = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionId,
+          userAlias: alias.value || 'guest',
+          message,
+          consent: consent.checked
+        })
+      });
+      const data = await r.json();
+      if (!r.ok || !data?.ok) throw new Error(JSON.stringify(data));
+      add('assistant', data.reply || '(no reply)');
+      // Optional: show log status briefly
+      if (data.log?.tried) {
+        statusEl.textContent = data.log.ok ? 'Logged ✔' : 'Log error';
+      } else {
+        statusEl.textContent = consent.checked ? 'Skipped logging (no consent?)' : 'Logging disabled';
+      }
+    } catch (e) {
+      statusEl.textContent = 'Error';
+      add('assistant', 'Sorry — something went wrong.');
+      console.error(e);
+    } finally {
+      send.disabled = false;
+    }
+  }
+
+  send.addEventListener('click', () => {
+    const msg = input.value.trim();
+    if (!msg) return;
+    add('user', msg);
+    input.value = '';
+    callChat(msg);
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+      send.click();
+    }
+  });
+</script>
+</body>
+</html>
