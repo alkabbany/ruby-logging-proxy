@@ -23,10 +23,32 @@
 <body>
   <div class="wrap">
     <header>
-      <img src="https://github.com/alkabbany/ruby-logging-proxy/raw/main/shc_logo.jpg" alt="SafeHouse Club Logo" />
+      <img src="https://github.com/alkabbany/ruby-logging-proxy/raw/main/shc_logo.jpg" alt="SafeHouse Club Logo" class="logo" />
       <h1>Welcome to Ruby</h1>
       <p>The official business development assistant of SafeHouse Club (SHC)</p>
     </header>
+    
+    <style>
+      header {
+        text-align: center;
+        padding: 1.5rem 1rem;
+      }
+      header .logo {
+        width: 100px;      /* control size */
+        height: 100px;     /* keep square for circular option */
+        object-fit: cover; /* crop neatly if needed */
+        border-radius: 50%; /* makes it circular; remove if you want square */
+        margin-bottom: 1rem;
+      }
+      header h1 {
+        font-size: 1.5rem;
+        margin: 0;
+      }
+      header p {
+        color: #aaa;
+        margin: 0.5rem 0 0;
+      }
+    </style>
 
     <div class="row">
       <label>Alias:</label>
