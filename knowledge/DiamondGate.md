@@ -1,6 +1,6 @@
 ---
 
-# Diamond Gate – Real Estate Investment & Hospitality
+# Diamond Gate – Real Estate Investment and Hospitality
 
 **Company Type:** Limited Liability Company (LLC), 2024
 **Sectors:** Real Estate Investment, Hospitality, Short/Long-Term Rentals
