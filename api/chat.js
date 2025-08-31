@@ -10,10 +10,10 @@ import path from "path";
 function pickDocs(q) {
   const t = (q || "").toLowerCase();
   const docs = [];
-  if (/(mahmeya)/.test(t)) docs.push("Mahmeya.md");
-  if (/(diamond\s*gate|prime\s*stays)/.test(t)) docs.push("DiamondGate.md");
-  if (/(share\b|sponsorship|media)/.test(t)) docs.push("Share.md");
-  if (/(compete|sports|tournament|academy)/.test(t)) docs.push("Compete.md");
+  if (/(mahmeya)/.test(t)) docs.push("mahmeya.md");
+  if (/(diamond\s*gate|prime\s*stays)/.test(t)) docs.push("diamond-gate.md");
+  if (/(share\b|sponsorship|media)/.test(t)) docs.push("share.md");
+  if (/(compete|sports|tournament|academy)/.test(t)) docs.push("compete.md");
   return docs;
 }
 
