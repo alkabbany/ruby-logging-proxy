@@ -1,4 +1,3 @@
----
 
 # Diamond Gate – Real Estate Investment and Hospitality
 
